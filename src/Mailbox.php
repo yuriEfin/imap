@@ -70,6 +70,29 @@ class Mailbox implements \Countable, \IteratorAggregate
     }
 
     /**
+     * Get messages by imap_fetch_overview
+     * @link http://php.net/manual/en/function.imap-fetch-overview.php
+     *
+     * @param string $sequence
+     * @return MessageIterator|Message[]
+     */
+    public function fetchOverview($sequence)
+    {
+        $this->init();
+
+        $messageNumbers = [];
+        $messageArrays = imap_fetch_overview($this->connection->getResource(), $sequence, \FT_UID);
+
+        if (is_array($messageArrays)) {
+            foreach ($messageArrays as $message) {
+                $messageNumbers[] = $message->uid;
+            }
+        }
+
+        return new MessageIterator($this->connection->getResource(), $messageNumbers);
+    }
+
+    /**
      * Get a message by message number
      *
      * @param int $number Message number
