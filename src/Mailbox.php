@@ -15,14 +15,25 @@ class Mailbox implements \Countable, \IteratorAggregate
     /**
      * Constructor
      *
-     * @param string     $name       Mailbox name
+     * @param string $name Mailbox name
      * @param Connection $connection IMAP connection
      */
     public function __construct($name, Connection $connection)
     {
         $this->mailbox = $name;
         $this->connection = $connection;
-        $this->name = substr($name, strpos($name, '}')+1);
+        $this->name = substr($name, strpos($name, '}') + 1);
+    }
+
+    public function reopen()
+    {
+        $this->init();
+    }
+
+    public function info()
+    {
+        $this->init();
+        return imap_mailboxmsginfo($this->connection->getResource());
     }
 
     /**
@@ -58,7 +69,7 @@ class Mailbox implements \Countable, \IteratorAggregate
     {
         $this->init();
 
-        $query = ($search ? (string) $search : 'ALL');
+        $query = ($search ? (string)$search : 'ALL');
 
         $messageNumbers = imap_search($this->connection->getResource(), $query, \SE_UID);
         if (false == $messageNumbers) {
