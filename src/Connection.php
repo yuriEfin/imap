@@ -185,4 +185,5 @@ class Connection
 		}
 		return $this->mailboxNames;
 	}
+
 }

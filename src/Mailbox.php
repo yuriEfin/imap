@@ -170,4 +170,5 @@ class Mailbox implements \Countable, \IteratorAggregate
 			imap_reopen($this->connection->getResource(), $this->mailbox);
 		}
 	}
+
 }
